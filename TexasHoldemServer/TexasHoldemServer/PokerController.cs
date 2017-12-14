@@ -13,15 +13,17 @@ namespace TexasHoldem.main.controller
     {
         private Poker model;
         private ServerView view;
-        private int PLAYERS = 2;
         private IPEndPoint ipPoint;
         private Socket listenSocket;
+
         private string[] playersState;
-        private long[] player_bets;
+        private long[] playerBets;
         private static int players = -1;
 
-        private static bool START_GAME = false;
+        private static bool isStartGame = false;
         private static bool isFinishRound;
+        private static bool isFinishGame;
+        private int PLAYERS = 2;
 
         public PokerController(Poker model, ServerView view)
         {
@@ -41,7 +43,7 @@ namespace TexasHoldem.main.controller
                 listenSocket.Bind(ipPoint);
                 listenSocket.Listen(10);
                 Console.WriteLine("server has started");
-                while(!START_GAME)
+                while(!isStartGame)
                 {
                     Socket handler = listenSocket.Accept();
                     string msg;
@@ -52,12 +54,7 @@ namespace TexasHoldem.main.controller
                         bytes = handler.Receive(data);
                         msg = Encoding.Unicode.GetString(data, 0, bytes);
                     } while (handler.Available > 0);
-                    Console.WriteLine(DateTime.Now.ToShortTimeString() + ":" + msg);
                     string resp = msgHandler(msg);
-                    /* if (resp.Equals("no_players"))
-                    {
-                        Console.Write("wait players ... " + (players+1));
-                    } */
                     data = Encoding.Unicode.GetBytes(resp);
                     handler.Send(data);
                     handler.Shutdown(SocketShutdown.Both);
@@ -65,6 +62,7 @@ namespace TexasHoldem.main.controller
                 }
             } catch(Exception e)
             {
+                Console.WriteLine("Connection exception");
                 Console.WriteLine(e.Message);
             }
             playPoker();
@@ -74,48 +72,61 @@ namespace TexasHoldem.main.controller
         private void playPoker()
         {
             int gameCounter = 0;
-
             try
             {
                 while (true)
                 {
                     int finish = 0;
                     initState();
+                    isFinishGame = false;
                     Console.WriteLine("game # " + ++gameCounter);
                     foreach (Poker.Stage stage in Enum.GetValues(typeof(Poker.Stage)))
                     {
-                        model.playPoker(stage);
-                        initStateWithoutFold();
-                        Console.WriteLine("game " + stage.ToString());
-                        isFinishRound = false;
-                        while (!isFinishRound)
+                        if (!isFinishGame)
                         {
-                            string resp;
-                            Socket handler = listenSocket.Accept();
-                            string msg;
-                            int bytes = 0;
-                            byte[] data = new byte[1024];
-                            do
+                            model.playPoker(stage);
+                            initStateWithoutFold();
+                            Console.WriteLine("game " + stage.ToString());
+                            isFinishRound = false;
+                            while (!isFinishRound)
                             {
-                                bytes = handler.Receive(data);
-                                msg = Encoding.Unicode.GetString(data, 0, bytes);
-                            } while (handler.Available > 0);
-                            if (stage == Poker.Stage.FINISH)
-                            {
-                                resp = msgHandler("finish");
-                                finish++;
-                                if(finish == 2)
+                                string resp;
+                                Socket handler = listenSocket.Accept();
+                                string msg;
+                                int bytes = 0;
+                                byte[] data = new byte[1024];
+                                do
                                 {
-                                    isFinishRound = true;
+                                    bytes = handler.Receive(data);
+                                    msg = Encoding.Unicode.GetString(data, 0, bytes);
+                                } while (handler.Available > 0);
+                                if (stage == Poker.Stage.FINISH)
+                                {
+                                    resp = msgHandler("finish");
+                                    // все игроки должны получить сообщение об окончании игры!
+                                    finish++;
+                                    if (finish == 2)
+                                    {
+                                        isFinishRound = true;
+                                    }
                                 }
-                            } else
-                            {
-                                resp = msgHandler(msg);
+                                else
+                                {
+                                    resp = msgHandler(msg);
+                                }
+                                data = Encoding.Unicode.GetBytes(resp);
+                                handler.Send(data);
+                                handler.Shutdown(SocketShutdown.Both);
+                                handler.Close();
                             }
-                            data = Encoding.Unicode.GetBytes(resp);
-                            handler.Send(data);
-                            handler.Shutdown(SocketShutdown.Both);
-                            handler.Close();
+                        }
+                        else
+                        {
+                            finish++;
+                            if(finish == 2)
+                            {
+                                break;
+                            }
                         }
                     }
                 }
@@ -136,13 +147,14 @@ namespace TexasHoldem.main.controller
         private void actionHandler(string action, int player)
         {
             string[] args = action.Split(':');
+            Console.WriteLine("player: " + player + " action: " + action);
             try
             {
                 switch (args[0])
                 {
                     case "call":
                         playersState[player] = "call";
-                        player_bets[player] = long.Parse(args[1]);
+                        playerBets[player] = long.Parse(args[1]);
                         model.next();
                         break;
                     case "check":
@@ -192,16 +204,30 @@ namespace TexasHoldem.main.controller
                             return "no_players";
                         } else
                         {
-                            START_GAME = true;
+                            isStartGame = true;
                             return logins();
                         }
                     case "stage":
-                        if (checkTurn(args[1]))
                         {
-                            return getInf("u_turn");
-                        } else
-                        {
-                            return getInf("not_u_turn");
+                            int playerID = int.Parse((args[1].Split(':')[1]));
+                            // если все скинули карты
+                            if (stageFinish(playerID))
+                            {
+                                Player p = model.determineWinners(playerID);
+                                string resp = getInf("win");
+                                resp += "||winers|" + p.getNickname();
+                                isFinishRound = true;
+                                isFinishGame = true;
+                                return resp;
+                            }
+                            if (checkTurn(args[1]))
+                            {
+                                return getInf("u_turn");
+                            }
+                            else
+                            {
+                                return getInf("not_u_turn");
+                            }
                         }
                     case "action":
                         {
@@ -229,6 +255,8 @@ namespace TexasHoldem.main.controller
                             resp += model.getStringWinners();
                             return resp;
                         }
+                    default:
+                        return "deny";
 
                 }
             } catch (Exception e)
