@@ -67,6 +67,11 @@ namespace TexasHoldem.main.model
             throw new Exception("Such suit doesn't exist");
         }
 
+        public string ToCode()
+        {
+            return type + "&" + suit;
+        }
+
         public override string ToString()
         {
             return name + "&" + suitName(this.suit);
@@ -75,34 +80,6 @@ namespace TexasHoldem.main.model
         // @Test
         static void Main(string[] args)
         {
-            /*Card c1 = new Card(1, 12, "Ace");
-            Card c2 = new Card(2, 9, "Jack");
-            c1.onHand = true;
-            c2.onHand = true;
-
-            Card c11 = new Card(1, 12, "Ace");
-            Card c22 = new Card(2, 9, "Jack");
-            c1.onHand = true;
-            c2.onHand = true;
-
-            Card c3 = new Card(2, 6, "Eight");
-            Card c4 = new Card(2, 12, "Ace");
-            Card c5 = new Card(1, 12, "Ace");
-            Card c6 = new Card(2, 0, "Two");
-            Card c7 = new Card(0, 6, "Eight");
-
-
-            List<Card> cards = new List<Card>();
-            cards.Add(c1);
-            cards.Add(c2); cards.Add(c3); cards.Add(c4); cards.Add(c5); cards.Add(c6);
-            cards.Add(c7);
-
-            CardCombination comb = new CardCombination();
-            // int[] combArr = comb.combinationCoefficient(cards);
-            // Console.WriteLine(string.Join(" ",combArr));
-            cards.Sort();
-            double p1 = comb.determineHandRank(cards);
-            Console.Read();*/
             HandRankDetermine();
         }
 
