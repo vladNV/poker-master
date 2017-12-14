@@ -65,14 +65,5 @@ namespace TexasHoldem.main.model
             position = -1;
         }
 
-        //@Test
-        public static void Main(string[] args)
-        {
-            /*CardStack stack = new CardStack();
-            stack.shuffle();
-            stack.printCardStack();*/
-
-        }
-
     }
 }

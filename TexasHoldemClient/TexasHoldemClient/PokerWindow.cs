@@ -148,6 +148,8 @@ namespace TexasHoldemClient
                     updateChips(args);
                     if (args[0].Equals("u_turn"))
                     {
+                        // нужно проверить, не повысил ли кто то ставку
+                        // если да то делаем неактивной кнопку check
                         active();
                         setText("you turn");
                         message = "action";

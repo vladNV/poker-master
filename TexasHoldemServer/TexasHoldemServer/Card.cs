@@ -77,7 +77,7 @@ namespace TexasHoldem.main.model
             return name + "&" + suitName(this.suit);
         }
 
-        // @Test
+        /*// @Test
         static void Main(string[] args)
         {
             HandRankDetermine();
@@ -136,7 +136,7 @@ namespace TexasHoldem.main.model
             }
             Console.Read();
 
-        }
+        } */
 
     }
 
