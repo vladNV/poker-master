@@ -21,9 +21,14 @@ namespace TexasHoldem.main.controller
         // количество игроков
         private static int players = -1;
 
-        private static bool isStartGame = false;
+        private static bool isStartGame;
         private static bool isFinishRound;
         private static bool isFinishGame;
+        private static bool allPlayersFold;
+
+        // игровые моменты
+        private int lastPlayer;
+        private int playersFinish;
 
         // size of lobby
         private int PLAYERS = 2;
@@ -80,57 +85,73 @@ namespace TexasHoldem.main.controller
             {
                 while (true)
                 {
-                    int finish = 0;
-                    initState();
+                    playersFinish = 0;
+                    lastPlayer = -1;
                     isFinishGame = false;
+                    allPlayersFold = false;
+                    initState();
                     Console.WriteLine("game # " + ++gameCounter);
                     foreach (Poker.Stage stage in Enum.GetValues(typeof(Poker.Stage)))
                     {
-                        if (!isFinishGame)
+                        model.playPoker(stage);
+                        initStateWithoutFold();
+                        // стадия игры
+                        Console.WriteLine("game " + stage.ToString());
+                        isFinishRound = false;
+                        // получение запроса
+                        while (!isFinishRound)
                         {
-                            model.playPoker(stage);
-                            initStateWithoutFold();
-                            // стадия игры
-                            Console.WriteLine("game " + stage.ToString());
-                            isFinishRound = false;
-                            while (!isFinishRound)
+                            string resp;
+                            Socket handler = listenSocket.Accept();
+                            string msg;
+                            int bytes = 0;
+                            byte[] data = new byte[1024];
+                            do
                             {
-                                string resp;
-                                Socket handler = listenSocket.Accept();
-                                string msg;
-                                int bytes = 0;
-                                byte[] data = new byte[1024];
-                                do
+                                bytes = handler.Receive(data);
+                                msg = Encoding.Unicode.GetString(data, 0, bytes);
+                            } while (handler.Available > 0);
+
+                            // если последний этап
+                            if (stage == Poker.Stage.FINISH)
+                            {
+                                resp = msgHandler("finish");
+                                // все игроки должны получить сообщение об окончании игры!
+                                playersFinish++;
+                                if (playersFinish == PLAYERS)
                                 {
-                                    bytes = handler.Receive(data);
-                                    msg = Encoding.Unicode.GetString(data, 0, bytes);
-                                } while (handler.Available > 0);
-                                if (stage == Poker.Stage.FINISH)
-                                {
-                                    resp = msgHandler("finish");
-                                    // все игроки должны получить сообщение об окончании игры!
-                                    finish++;
-                                    if (finish == 2)
-                                    {
-                                        isFinishRound = true;
-                                    }
+                                    isFinishRound = true;
                                 }
-                                else
+                            } else if (allPlayersFold) {
+                                resp = msgHandler("finish");
+                                playersFinish++;
+                                if (playersFinish == PLAYERS)
                                 {
-                                    resp = msgHandler(msg);
+                                    isFinishRound = true;
+                                    isFinishGame = true;
                                 }
-                                data = Encoding.Unicode.GetBytes(resp);
-                                handler.Send(data);
-                                handler.Shutdown(SocketShutdown.Both);
-                                handler.Close();
+
                             }
+                            // обработка запроса
+                            else
+                            {
+                                resp = msgHandler(msg);
+                            }
+
+                            // отправка ответа
+                            data = Encoding.Unicode.GetBytes(resp);
+                            handler.Send(data);
+                            handler.Shutdown(SocketShutdown.Both);
+                            handler.Close();
                         }
-                        else
+                        if (isFinishGame)
                         {
+                            model.resetQueue();
                             break;
                         }
                     }
-                    Thread.Sleep(2000);
+                    // Делаем паузу.
+                    Thread.Sleep(3000);
                 }
             }
             catch (Exception e)
@@ -215,16 +236,21 @@ namespace TexasHoldem.main.controller
                         }
                     case "stage":
                         {
+                            // id игрока
                             int playerID = int.Parse((args[1].Split(':')[1]));
+                            // если игрок скинул карты, он пропускает свои ходы.
+                            if(playersState[playerID].Equals("fold"))
+                            {
+                                model.next();
+                                return getInf("not_u_turn");
+                            }
                             // если все скинули карты
                             if (stageFinish(playerID))
                             {
-                                Player p = model.determineWinners(playerID);
-                                string resp = getInf("win");
-                                resp += "||winers|" + p.getNickname();
-                                isFinishRound = true;
-                                isFinishGame = true;
-                                return resp;
+                                lastPlayer = playerID;
+                                allPlayersFold = true;
+                                playersFinish++;
+                                return msgHandler("finish");
                             }
                             if (checkTurn(args[1]))
                             {
@@ -257,8 +283,18 @@ namespace TexasHoldem.main.controller
                         }
                     case "finish":
                         {
-                            string resp = getInf("win");
-                            resp += model.getStringWinners();
+                            string resp;
+                            if (allPlayersFold)
+                            {
+                                // последний оставшийся игрок
+                                Player p = model.determineWinners(lastPlayer);
+                                resp = getInf("win");
+                                resp += "||winers|" + p.getNickname();
+                            } else
+                            {
+                                resp = getInf("win");
+                                resp += model.getStringWinners();
+                            }
                             return resp;
                         }
                     default:
@@ -295,7 +331,6 @@ namespace TexasHoldem.main.controller
             {
                 throw new Exception("get information exception!" + e.Message);
             }
-
             return resp;
         }
 

@@ -41,14 +41,14 @@ namespace TexasHoldemServer.model
             players.Add(player);
         }
 
-        public bool ready()
-        {
-            return players.Count >= 2;
-        }
-
         public int getTurn()
         {
             return turn;
+        }
+
+        public void resetQueue()
+        {
+            turn = 0;
         }
 
         public void next()

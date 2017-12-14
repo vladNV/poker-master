@@ -13,6 +13,8 @@ namespace TexasHoldemClient
         private int PLAYERS = 2;
         private string address = "127.0.0.1";
         private string msg_action = "not_action";
+        private bool finish;
+
         public PokerWindow() { }
         public PokerWindow(int port, string login)
         {
@@ -104,11 +106,17 @@ namespace TexasHoldemClient
         {
             try
             {
+                string message = null;
                 Thread.Sleep(2000);
                 // сообщение для сервера;
-                string message = null;
                 while (true)
                 {
+                    // если картинки карты не удаляется, доп финализация
+                    if (finish)
+                    {
+                        finalize();
+                        finish = false;
+                    }
                     string stage = (string)stage_param;
                     IPEndPoint ipPoint = new IPEndPoint(IPAddress.Parse(address), player.getPort());
                     Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -154,8 +162,10 @@ namespace TexasHoldemClient
                         Console.WriteLine(player.getLogin() + " won !");
                         string[] param = args[4].Split('|');
                         printWinners(extractMsgAboutWinners(param[1]));
-                        Thread.Sleep(4000);
+                        Thread.Sleep(3000);
                         finalize();
+                        finish = true;
+
                     }
                     else {
                         setText("you wait");
@@ -453,7 +463,10 @@ namespace TexasHoldemClient
         private void finalize()
         {
             if (player1cards.InvokeRequired && player2cards.InvokeRequired
-                && tableCard.InvokeRequired)
+                && tableCard.InvokeRequired && p1c1.InvokeRequired && p1c2.InvokeRequired
+                    && p2c1.InvokeRequired && p2c2.InvokeRequired
+                        && tc1.InvokeRequired && tc2.InvokeRequired
+                            && tc3.InvokeRequired && tc4.InvokeRequired && tc5.InvokeRequired)
             {
                 Finalize f = new Finalize(finalize);
                 Invoke(f, new object[] { });
@@ -466,13 +479,17 @@ namespace TexasHoldemClient
                 msg_action = "";
                 p1c1.ImageLocation = null;
                 p1c2.ImageLocation = null;
+
                 p2c1.ImageLocation = null;
                 p2c2.ImageLocation = null;
+
                 tc1.ImageLocation = null;
                 tc2.ImageLocation = null;
+
                 tc3.ImageLocation = null;
                 tc4.ImageLocation = null;
                 tc5.ImageLocation = null;
+
             }
         }
 
