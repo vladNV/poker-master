@@ -132,6 +132,8 @@ namespace TexasHoldemClient
                         bytes = socket.Receive(data, data.Length, 0);
                         resp = Encoding.Unicode.GetString(data, 0, bytes);
                     } while (socket.Available > 0);
+                    // получаем ответ от сервера
+                    // args[0] - status
                     string[] args = resp.Split(new[] { "||" }, StringSplitOptions.None);
                     Draw(args);
                     if (args[0].Equals("u_turn")) {
@@ -148,7 +150,7 @@ namespace TexasHoldemClient
                         Console.WriteLine(player.getLogin() + " won !");
                         string[] param = args[4].Split('|');
                         printWinners(extractMsgAboutWinners(param[1]));
-                        Thread.Sleep(3000);
+                        Thread.Sleep(4000);
                         finalize();
                     }
                     else {
@@ -161,7 +163,7 @@ namespace TexasHoldemClient
                     // if
                     socket.Shutdown(SocketShutdown.Both);
                     socket.Close();
-                    Thread.Sleep(1500);
+                    Thread.Sleep(2000);
                 }
             } catch (Exception e)
             {
@@ -206,10 +208,13 @@ namespace TexasHoldemClient
         {
             // fix draw
             if(player1cards.InvokeRequired && player2cards.InvokeRequired
-                && tableCard.InvokeRequired)
+                    && tableCard.InvokeRequired && player1.InvokeRequired 
+                        && p1act.InvokeRequired && p2act.InvokeRequired
+                            && p1chips.InvokeRequired && p2chips.InvokeRequired
+                                && bank.InvokeRequired)
             {
                 DrawCallback d = new DrawCallback(Draw);
-                this.Invoke(d, new object[] { args });
+                Invoke(d, new object[] { args });
             } else
             {
                 string[] param1 = args[1].Split('|');
@@ -218,8 +223,25 @@ namespace TexasHoldemClient
                 player1cards.Text = param1[1];
                 player2cards.Text = param2[1];
                 tableCard.Text = table[1];
+
+                p1chips.Text = param1[2];
+                p2chips.Text = param2[2];
+                bank.Text = table[2];
+
+                // действия
+                animation(param1[3], param2[3]);
+  
             }
         }
+
+        // fix me, for many players
+        private void animation(string p1, string p2)
+        {
+            p1act.Text = p1;
+            p2act.Text = p2;
+
+        }
+
         public void selectLabel(int number, string text)
         {
             switch(number)
@@ -340,6 +362,16 @@ namespace TexasHoldemClient
                 button3.Enabled = false;
                 textBox1.Enabled = false;
             }
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void p2chips_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

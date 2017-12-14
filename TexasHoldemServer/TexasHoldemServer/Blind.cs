@@ -18,6 +18,11 @@ namespace TexasHoldem.main.model
             this.upper = upper;
         }
 
+        public long Total()
+        {
+            return total;
+        }
+
         public long getLower()
         {
             return lower;
@@ -37,11 +42,14 @@ namespace TexasHoldem.main.model
 
         public void bet(long value)
         {
+            total += value;
+            /*
             //check
             if (value >= upper)
             {
-                this.total += value;
+                total += value;
             }
+            */
         }
     }
 }

@@ -15,8 +15,8 @@ namespace TexasHoldemServer.model
         private List<Player> winners;
 
         private List<Card> tableCards;
-        private int bigBlind;
         private int smallBlind;
+        private int bigBlind;
         private int turn = 0;
         public enum Stage { PREFLOP, FLOP, TURN, RIVER, FINISH}
 
@@ -108,15 +108,27 @@ namespace TexasHoldemServer.model
         }
         private void smallAndBig()
         {
-            Player small = players[smallBlind];
-            long total1 = small.getChips();
-            long bet1 = blind.getLower();
-            small.setChips(total1 - bet1);
+            try
+            {
+                Player small = players[smallBlind];
+                long total1 = small.getChips();
+                long bet1 = blind.getLower();
+                small.setChips(total1 - bet1);
+                blind.bet(bet1);
 
-            Player big = players[smallBlind];
-            long total2 = small.getChips();
-            long bet2 = blind.getLower();
-            small.setChips(total2 - bet2);
+                Player big = players[bigBlind];
+                long total2 = big.getChips();
+                long bet2 = blind.getUpper();
+                big.setChips(total2 - bet2);
+                blind.bet(bet2);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Poker, smallAndBiG exception");
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
+            }
+
         }
 
         
@@ -141,6 +153,8 @@ namespace TexasHoldemServer.model
                 {
                     if (players[i].pokerCombo == players[i + 1].pokerCombo)
                     {
+                        long chips = players[i].getChips();
+                        players[i].setChips(chips + blind.getBank());
                         winners.Add(players[i]);
                     }
                 }
@@ -177,9 +191,11 @@ namespace TexasHoldemServer.model
             return resp.Substring(0, resp.Length - 1);
         }
 
-        public Player determineWinners(int playerID)
+        public Player determineWinners(int id)
         {
-            return players[playerID];
+            long chips = players[id].getChips();
+            players[id].setChips(chips + blind.getBank());
+            return players[id];
         }
 
         public string getCards()

@@ -17,12 +17,14 @@ namespace TexasHoldem.main.controller
         private Socket listenSocket;
 
         private string[] playersState;
-        private long[] playerBets;
+        // количество игроков
         private static int players = -1;
 
         private static bool isStartGame = false;
         private static bool isFinishRound;
         private static bool isFinishGame;
+
+        // size of lobby
         private int PLAYERS = 2;
 
         public PokerController(Poker model, ServerView view)
@@ -65,6 +67,7 @@ namespace TexasHoldem.main.controller
                 Console.WriteLine("Connection exception");
                 Console.WriteLine(e.Message);
             }
+            // начинаем игру
             playPoker();
 
         }
@@ -86,6 +89,7 @@ namespace TexasHoldem.main.controller
                         {
                             model.playPoker(stage);
                             initStateWithoutFold();
+                            // стадия игры
                             Console.WriteLine("game " + stage.ToString());
                             isFinishRound = false;
                             while (!isFinishRound)
@@ -122,11 +126,7 @@ namespace TexasHoldem.main.controller
                         }
                         else
                         {
-                            finish++;
-                            if(finish == 2)
-                            {
-                                break;
-                            }
+                            break;
                         }
                     }
                 }
@@ -153,8 +153,12 @@ namespace TexasHoldem.main.controller
                 switch (args[0])
                 {
                     case "call":
-                        playersState[player] = "call";
-                        playerBets[player] = long.Parse(args[1]);
+                        playersState[player] = action;
+                        long bet = long.Parse(args[1]);
+                        model.getBank().bet(bet);
+                        Player p = model.getPlayers()[player];
+                        long chips = p.getChips();
+                        p.setChips(chips - bet);
                         model.next();
                         break;
                     case "check":
@@ -281,11 +285,13 @@ namespace TexasHoldem.main.controller
                     resp += players[i].getStringCards();
                     resp += "|chips:";
                     resp += players[i].getChips();
+                    // action
+                    resp += "|action:" + playersState[i];
                 }
-                resp += "||table|card:" + model.getCards() + "|chips:" + model.getBank().getBank();
+                resp += "||table|card:" + model.getCards() + "|chips:" + model.getBank().Total();
             } catch (Exception e)
             {
-                throw new Exception("get INF exception!" + e.Message);
+                throw new Exception("get information exception!" + e.Message);
             }
 
             return resp;

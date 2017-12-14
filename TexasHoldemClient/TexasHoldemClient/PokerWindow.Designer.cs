@@ -40,6 +40,12 @@
             this.status = new System.Windows.Forms.Label();
             this.winner = new System.Windows.Forms.Label();
             this.youLogin = new System.Windows.Forms.Label();
+            this.p1chips = new System.Windows.Forms.Label();
+            this.p2chips = new System.Windows.Forms.Label();
+            this.bank = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.p2act = new System.Windows.Forms.Label();
+            this.p1act = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // button1
@@ -89,7 +95,7 @@
             this.player1.AutoSize = true;
             this.player1.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.player1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.player1.Location = new System.Drawing.Point(239, 381);
+            this.player1.Location = new System.Drawing.Point(27, 381);
             this.player1.Name = "player1";
             this.player1.Size = new System.Drawing.Size(25, 25);
             this.player1.TabIndex = 7;
@@ -100,7 +106,7 @@
             this.player2.AutoSize = true;
             this.player2.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.player2.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.player2.Location = new System.Drawing.Point(251, 9);
+            this.player2.Location = new System.Drawing.Point(27, 9);
             this.player2.Name = "player2";
             this.player2.Size = new System.Drawing.Size(25, 25);
             this.player2.TabIndex = 8;
@@ -122,7 +128,7 @@
             this.player1cards.AutoSize = true;
             this.player1cards.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.player1cards.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.player1cards.Location = new System.Drawing.Point(241, 336);
+            this.player1cards.Location = new System.Drawing.Point(275, 381);
             this.player1cards.Name = "player1cards";
             this.player1cards.Size = new System.Drawing.Size(21, 15);
             this.player1cards.TabIndex = 12;
@@ -133,7 +139,7 @@
             this.player2cards.AutoSize = true;
             this.player2cards.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.player2cards.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.player2cards.Location = new System.Drawing.Point(253, 50);
+            this.player2cards.Location = new System.Drawing.Point(275, 9);
             this.player2cards.Name = "player2cards";
             this.player2cards.Size = new System.Drawing.Size(21, 15);
             this.player2cards.TabIndex = 13;
@@ -169,12 +175,79 @@
             this.youLogin.TabIndex = 16;
             this.youLogin.Text = "Your login:";
             // 
+            // p1chips
+            // 
+            this.p1chips.AutoSize = true;
+            this.p1chips.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.p1chips.Location = new System.Drawing.Point(275, 359);
+            this.p1chips.Name = "p1chips";
+            this.p1chips.Size = new System.Drawing.Size(13, 13);
+            this.p1chips.TabIndex = 17;
+            this.p1chips.Text = "?";
+            // 
+            // p2chips
+            // 
+            this.p2chips.AutoSize = true;
+            this.p2chips.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.p2chips.Location = new System.Drawing.Point(275, 39);
+            this.p2chips.Name = "p2chips";
+            this.p2chips.Size = new System.Drawing.Size(13, 13);
+            this.p2chips.TabIndex = 18;
+            this.p2chips.Text = "?";
+            this.p2chips.Click += new System.EventHandler(this.p2chips_Click);
+            // 
+            // bank
+            // 
+            this.bank.AutoSize = true;
+            this.bank.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.bank.Location = new System.Drawing.Point(74, 234);
+            this.bank.Name = "bank";
+            this.bank.Size = new System.Drawing.Size(13, 13);
+            this.bank.TabIndex = 19;
+            this.bank.Text = "?";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.label3.Location = new System.Drawing.Point(29, 234);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(35, 13);
+            this.label3.TabIndex = 22;
+            this.label3.Text = "Bank:";
+            // 
+            // p2act
+            // 
+            this.p2act.AutoSize = true;
+            this.p2act.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.p2act.Location = new System.Drawing.Point(29, 39);
+            this.p2act.Name = "p2act";
+            this.p2act.Size = new System.Drawing.Size(25, 13);
+            this.p2act.TabIndex = 23;
+            this.p2act.Text = "???";
+            // 
+            // p1act
+            // 
+            this.p1act.AutoSize = true;
+            this.p1act.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.p1act.Location = new System.Drawing.Point(29, 359);
+            this.p1act.Name = "p1act";
+            this.p1act.Size = new System.Drawing.Size(25, 13);
+            this.p1act.TabIndex = 24;
+            this.p1act.Text = "???";
+            // 
             // PokerWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DarkGreen;
             this.ClientSize = new System.Drawing.Size(694, 415);
+            this.Controls.Add(this.p1act);
+            this.Controls.Add(this.p2act);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.bank);
+            this.Controls.Add(this.p2chips);
+            this.Controls.Add(this.p1chips);
             this.Controls.Add(this.youLogin);
             this.Controls.Add(this.winner);
             this.Controls.Add(this.status);
@@ -209,6 +282,12 @@
         private System.Windows.Forms.Label status;
         private System.Windows.Forms.Label winner;
         private System.Windows.Forms.Label youLogin;
+        private System.Windows.Forms.Label p1chips;
+        private System.Windows.Forms.Label p2chips;
+        private System.Windows.Forms.Label bank;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label p2act;
+        private System.Windows.Forms.Label p1act;
     }
 }
 
