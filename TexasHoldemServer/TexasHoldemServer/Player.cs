@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace TexasHoldem.main.model
 {
@@ -14,12 +10,13 @@ namespace TexasHoldem.main.model
             this.nickname = nickname;
             this.chips = chips;
         }
+        // public fields for sort
         public double pokerCombo;
+        public int number;
 
         private int port;
         private string nickname;
         private long chips;
-        private int number;
         private List<Card> playerCards;
 
         public void setPort(int port)
@@ -84,8 +81,8 @@ namespace TexasHoldem.main.model
             string cards = "";
             if(playerCards != null)
             {
-                cards += playerCards[0].ToString() + "," +
-                            playerCards[1].ToString();
+                cards += playerCards[0].ToCode() + "," +
+                            playerCards[1].ToCode();
                 return cards;
             }
             else

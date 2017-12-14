@@ -46,6 +46,24 @@
             this.label3 = new System.Windows.Forms.Label();
             this.p2act = new System.Windows.Forms.Label();
             this.p1act = new System.Windows.Forms.Label();
+            this.p1c2 = new System.Windows.Forms.PictureBox();
+            this.p1c1 = new System.Windows.Forms.PictureBox();
+            this.p2c1 = new System.Windows.Forms.PictureBox();
+            this.p2c2 = new System.Windows.Forms.PictureBox();
+            this.tc1 = new System.Windows.Forms.PictureBox();
+            this.tc2 = new System.Windows.Forms.PictureBox();
+            this.tc3 = new System.Windows.Forms.PictureBox();
+            this.tc4 = new System.Windows.Forms.PictureBox();
+            this.tc5 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.p1c2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.p1c1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.p2c1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.p2c2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tc1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tc2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tc3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tc4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tc5)).BeginInit();
             this.SuspendLayout();
             // 
             // button1
@@ -117,7 +135,7 @@
             this.tableCard.AutoSize = true;
             this.tableCard.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.tableCard.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.tableCard.Location = new System.Drawing.Point(29, 198);
+            this.tableCard.Location = new System.Drawing.Point(12, 184);
             this.tableCard.Name = "tableCard";
             this.tableCard.Size = new System.Drawing.Size(80, 15);
             this.tableCard.TabIndex = 11;
@@ -128,22 +146,20 @@
             this.player1cards.AutoSize = true;
             this.player1cards.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.player1cards.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.player1cards.Location = new System.Drawing.Point(275, 381);
+            this.player1cards.Location = new System.Drawing.Point(361, 391);
             this.player1cards.Name = "player1cards";
-            this.player1cards.Size = new System.Drawing.Size(21, 15);
+            this.player1cards.Size = new System.Drawing.Size(0, 15);
             this.player1cards.TabIndex = 12;
-            this.player1cards.Text = "??";
             // 
             // player2cards
             // 
             this.player2cards.AutoSize = true;
             this.player2cards.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.player2cards.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.player2cards.Location = new System.Drawing.Point(275, 9);
+            this.player2cards.Location = new System.Drawing.Point(361, 9);
             this.player2cards.Name = "player2cards";
-            this.player2cards.Size = new System.Drawing.Size(21, 15);
+            this.player2cards.Size = new System.Drawing.Size(0, 15);
             this.player2cards.TabIndex = 13;
-            this.player2cards.Text = "??";
             // 
             // status
             // 
@@ -179,7 +195,7 @@
             // 
             this.p1chips.AutoSize = true;
             this.p1chips.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.p1chips.Location = new System.Drawing.Point(275, 359);
+            this.p1chips.Location = new System.Drawing.Point(361, 369);
             this.p1chips.Name = "p1chips";
             this.p1chips.Size = new System.Drawing.Size(13, 13);
             this.p1chips.TabIndex = 17;
@@ -189,7 +205,7 @@
             // 
             this.p2chips.AutoSize = true;
             this.p2chips.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.p2chips.Location = new System.Drawing.Point(275, 39);
+            this.p2chips.Location = new System.Drawing.Point(361, 39);
             this.p2chips.Name = "p2chips";
             this.p2chips.Size = new System.Drawing.Size(13, 13);
             this.p2chips.TabIndex = 18;
@@ -200,7 +216,7 @@
             // 
             this.bank.AutoSize = true;
             this.bank.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.bank.Location = new System.Drawing.Point(74, 234);
+            this.bank.Location = new System.Drawing.Point(57, 220);
             this.bank.Name = "bank";
             this.bank.Size = new System.Drawing.Size(13, 13);
             this.bank.TabIndex = 19;
@@ -210,7 +226,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label3.Location = new System.Drawing.Point(29, 234);
+            this.label3.Location = new System.Drawing.Point(12, 220);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(35, 13);
             this.label3.TabIndex = 22;
@@ -236,12 +252,93 @@
             this.p1act.TabIndex = 24;
             this.p1act.Text = "???";
             // 
+            // p1c2
+            // 
+            this.p1c2.Location = new System.Drawing.Point(246, 330);
+            this.p1c2.Name = "p1c2";
+            this.p1c2.Size = new System.Drawing.Size(50, 73);
+            this.p1c2.TabIndex = 25;
+            this.p1c2.TabStop = false;
+            // 
+            // p1c1
+            // 
+            this.p1c1.Location = new System.Drawing.Point(179, 330);
+            this.p1c1.Name = "p1c1";
+            this.p1c1.Size = new System.Drawing.Size(50, 73);
+            this.p1c1.TabIndex = 26;
+            this.p1c1.TabStop = false;
+            // 
+            // p2c1
+            // 
+            this.p2c1.Location = new System.Drawing.Point(179, 12);
+            this.p2c1.Name = "p2c1";
+            this.p2c1.Size = new System.Drawing.Size(50, 73);
+            this.p2c1.TabIndex = 28;
+            this.p2c1.TabStop = false;
+            // 
+            // p2c2
+            // 
+            this.p2c2.Location = new System.Drawing.Point(246, 12);
+            this.p2c2.Name = "p2c2";
+            this.p2c2.Size = new System.Drawing.Size(50, 73);
+            this.p2c2.TabIndex = 27;
+            this.p2c2.TabStop = false;
+            // 
+            // tc1
+            // 
+            this.tc1.Location = new System.Drawing.Point(115, 174);
+            this.tc1.Name = "tc1";
+            this.tc1.Size = new System.Drawing.Size(50, 73);
+            this.tc1.TabIndex = 29;
+            this.tc1.TabStop = false;
+            // 
+            // tc2
+            // 
+            this.tc2.Location = new System.Drawing.Point(180, 174);
+            this.tc2.Name = "tc2";
+            this.tc2.Size = new System.Drawing.Size(50, 73);
+            this.tc2.TabIndex = 30;
+            this.tc2.TabStop = false;
+            // 
+            // tc3
+            // 
+            this.tc3.Location = new System.Drawing.Point(246, 174);
+            this.tc3.Name = "tc3";
+            this.tc3.Size = new System.Drawing.Size(50, 73);
+            this.tc3.TabIndex = 31;
+            this.tc3.TabStop = false;
+            // 
+            // tc4
+            // 
+            this.tc4.Location = new System.Drawing.Point(311, 174);
+            this.tc4.Name = "tc4";
+            this.tc4.Size = new System.Drawing.Size(50, 73);
+            this.tc4.TabIndex = 32;
+            this.tc4.TabStop = false;
+            // 
+            // tc5
+            // 
+            this.tc5.Location = new System.Drawing.Point(377, 174);
+            this.tc5.Name = "tc5";
+            this.tc5.Size = new System.Drawing.Size(50, 73);
+            this.tc5.TabIndex = 33;
+            this.tc5.TabStop = false;
+            // 
             // PokerWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DarkGreen;
             this.ClientSize = new System.Drawing.Size(694, 415);
+            this.Controls.Add(this.tc5);
+            this.Controls.Add(this.tc4);
+            this.Controls.Add(this.tc3);
+            this.Controls.Add(this.tc2);
+            this.Controls.Add(this.tc1);
+            this.Controls.Add(this.p2c1);
+            this.Controls.Add(this.p2c2);
+            this.Controls.Add(this.p1c1);
+            this.Controls.Add(this.p1c2);
             this.Controls.Add(this.p1act);
             this.Controls.Add(this.p2act);
             this.Controls.Add(this.label3);
@@ -263,6 +360,15 @@
             this.Name = "PokerWindow";
             this.Text = "Form1";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.global_FormClosed);
+            ((System.ComponentModel.ISupportInitialize)(this.p1c2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.p1c1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.p2c1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.p2c2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tc1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tc2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tc3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tc4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tc5)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -288,6 +394,15 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label p2act;
         private System.Windows.Forms.Label p1act;
+        private System.Windows.Forms.PictureBox p1c2;
+        private System.Windows.Forms.PictureBox p1c1;
+        private System.Windows.Forms.PictureBox p2c1;
+        private System.Windows.Forms.PictureBox p2c2;
+        private System.Windows.Forms.PictureBox tc1;
+        private System.Windows.Forms.PictureBox tc2;
+        private System.Windows.Forms.PictureBox tc3;
+        private System.Windows.Forms.PictureBox tc4;
+        private System.Windows.Forms.PictureBox tc5;
     }
 }
 

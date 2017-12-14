@@ -135,16 +135,20 @@ namespace TexasHoldemClient
                     // получаем ответ от сервера
                     // args[0] - status
                     string[] args = resp.Split(new[] { "||" }, StringSplitOptions.None);
+                    DrawCards(args);
                     Draw(args);
-                    if (args[0].Equals("u_turn")) {
+                    updateChips(args);
+                    if (args[0].Equals("u_turn"))
+                    {
                         active();
                         setText("you turn");
                         message = "action";
                     }
-                    else if (args[0].Equals("wait_action")) {
+                    else if (args[0].Equals("wait_action"))
+                    {
                         // ожидаем действие игрока
                         continue;
-                    } 
+                    }
                     else if (args[0].Equals("win"))
                     {
                         Console.WriteLine(player.getLogin() + " won !");
@@ -169,6 +173,29 @@ namespace TexasHoldemClient
             {
                 Console.WriteLine(e.Message);
             }
+        }
+
+        private void updateChips(string[] args)
+        {
+            string[] param;
+            // достаем нужного игрока
+            try
+            {
+                for (int i = 0; i < PLAYERS; i++)
+                {
+                    if (i == player.getNumber())
+                    {
+                        param = args[i + 1].Split('|');
+                        // обновляем фишки
+                        player.setChips(long.Parse(param[2].Split(':')[1]));
+                    }
+                }
+            } catch (Exception e)
+            {
+                Console.WriteLine("client controller, update chips exception");
+                Console.WriteLine(e.Message);
+            }
+
         }
 
         private string extractMsgAboutWinners(string arg)
@@ -202,12 +229,106 @@ namespace TexasHoldemClient
             Application.Exit();
         }
 
+        delegate void DrawCardsCallback(string[] args);
+
         delegate void DrawCallback(string[] args);
+
+        public void DrawCards(string[] args)
+        {
+            if (p1c1.InvokeRequired && p1c2.InvokeRequired
+                    && p2c1.InvokeRequired && p2c2.InvokeRequired
+                        && tc1.InvokeRequired && tc2.InvokeRequired
+                            && tc3.InvokeRequired && tc4.InvokeRequired
+                                && tc5.InvokeRequired)
+            {
+                DrawCardsCallback dc = new DrawCardsCallback(DrawCards);
+                Invoke(dc, new object[] { args });
+            } else
+            {
+                try
+                {
+                    string[] card1 = args[1].Split('|');
+                    string[] card2 = args[2].Split('|');
+                    string[] table = args[3].Split('|');
+
+                    card1 = card1[1].Split(':');
+                    card2 = card2[1].Split(':');
+                    table = table[1].Split(':');
+
+                    card1 = card1[1].Split(',');
+                    card2 = card2[1].Split(',');
+                    table = table[1].Split(',');
+
+                    if (p1c1.ImageLocation == null && p1c2.ImageLocation == null)
+                    {
+                        p1c1.ImageLocation = CardImage.getResource(card1[0]);
+                        p1c2.ImageLocation = CardImage.getResource(card1[1]);
+                        p1c1.SizeMode = PictureBoxSizeMode.StretchImage;
+                        p1c2.SizeMode = PictureBoxSizeMode.StretchImage;
+                    }
+
+                    if (p2c1.ImageLocation == null && p2c2.ImageLocation == null)
+                    {
+                        p2c1.ImageLocation = CardImage.getResource(card2[0]);
+                        p2c2.ImageLocation = CardImage.getResource(card2[1]);
+                        p2c1.SizeMode = PictureBoxSizeMode.StretchImage;
+                        p2c2.SizeMode = PictureBoxSizeMode.StretchImage;
+                    }
+
+                    if(table.Length > 1)
+                    {
+                        if(tc1.ImageLocation == null) { 
+                            tc1.ImageLocation = CardImage.getResource(table[0]);
+                            tc1.SizeMode = PictureBoxSizeMode.StretchImage; 
+                        }
+                        if (table.Length >= 2)
+                        {
+                            if (tc2.ImageLocation == null)
+                            {
+                                tc2.ImageLocation = CardImage.getResource(table[1]);
+                                tc2.SizeMode = PictureBoxSizeMode.StretchImage;
+                            }
+                            if (table.Length >= 3)
+                            {
+                                if (tc3.ImageLocation == null)
+                                {
+                                    tc3.ImageLocation = CardImage.getResource(table[2]);
+                                    tc3.SizeMode = PictureBoxSizeMode.StretchImage;
+                                }
+
+                                if (table.Length >= 4)
+                                {
+                                    if (tc4.ImageLocation == null)
+                                    {
+                                        tc4.ImageLocation = CardImage.getResource(table[3]);
+                                        tc4.SizeMode = PictureBoxSizeMode.StretchImage;
+                                    }
+                                    if (table.Length == 5)
+                                    {
+                                        if (tc5.ImageLocation == null)
+                                        {
+                                            tc5.ImageLocation = CardImage.getResource(table[4]);
+                                            tc5.SizeMode = PictureBoxSizeMode.StretchImage;
+                                        }
+                                    }
+                                }
+                            }
+                        } 
+                    } 
+                } catch (Exception e)
+                {
+                    Console.WriteLine("Draw cards exepction");
+                    Console.WriteLine(e.Message);
+                }
+
+
+            }
+        }
 
         public void Draw(string[] args)
         {
             // fix draw
-            if(player1cards.InvokeRequired && player2cards.InvokeRequired
+            if (player1cards.InvokeRequired && player2cards.InvokeRequired
                     && tableCard.InvokeRequired && player1.InvokeRequired 
                         && p1act.InvokeRequired && p2act.InvokeRequired
                             && p1chips.InvokeRequired && p2chips.InvokeRequired
@@ -220,9 +341,9 @@ namespace TexasHoldemClient
                 string[] param1 = args[1].Split('|');
                 string[] param2 = args[2].Split('|');
                 string[] table = args[3].Split('|');
-                player1cards.Text = param1[1];
-                player2cards.Text = param2[1];
-                tableCard.Text = table[1];
+                //player1cards.Text = param1[1];
+                //player2cards.Text = param2[1];
+                //tableCard.Text = table[1];
 
                 p1chips.Text = param1[2];
                 p2chips.Text = param2[2];
@@ -343,6 +464,15 @@ namespace TexasHoldemClient
                 tableCard.Text = "Card on table:";
                 winner.Text = "Winners: ";
                 msg_action = "";
+                p1c1.ImageLocation = null;
+                p1c2.ImageLocation = null;
+                p2c1.ImageLocation = null;
+                p2c2.ImageLocation = null;
+                tc1.ImageLocation = null;
+                tc2.ImageLocation = null;
+                tc3.ImageLocation = null;
+                tc4.ImageLocation = null;
+                tc5.ImageLocation = null;
             }
         }
 

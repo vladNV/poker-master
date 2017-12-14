@@ -153,11 +153,16 @@ namespace TexasHoldemServer.model
                 {
                     if (players[i].pokerCombo == players[i + 1].pokerCombo)
                     {
-                        long chips = players[i].getChips();
-                        players[i].setChips(chips + blind.getBank());
                         winners.Add(players[i]);
                     }
                 }
+                long bank = blind.getBank() / winners.Count;
+                for (int i = 0; i < winners.Count; i++)
+                {
+                    long chips = winners[i].getChips();
+                    winners[i].setChips(chips + bank);
+                }
+
             } catch (IndexOutOfRangeException e)
             {
                 Console.WriteLine("Poker, determine winners. IndexOutOfRangeException");
@@ -171,6 +176,7 @@ namespace TexasHoldemServer.model
             }
             finally
             {
+                players = players.OrderBy(i => i.number).ToList();
                 Console.WriteLine("Winner has selected");
             }
 
@@ -203,7 +209,7 @@ namespace TexasHoldemServer.model
             string request = "";
             for(int i = 0; i < tableCards.Count; i++)
             {
-                request += tableCards[i].ToString() + ",";
+                request += tableCards[i].ToCode() + ",";
             }
             if(request.Length != 0)
             {

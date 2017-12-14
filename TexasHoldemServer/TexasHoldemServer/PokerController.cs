@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using TexasHoldem.main.model;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 
 namespace TexasHoldem.main.controller
 {
@@ -129,6 +130,7 @@ namespace TexasHoldem.main.controller
                             break;
                         }
                     }
+                    Thread.Sleep(2000);
                 }
             }
             catch (Exception e)
