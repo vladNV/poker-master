@@ -4,16 +4,24 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using TexasHoldemClient.view;
 
 namespace TexasHoldemClient
 {
     public partial class PokerWindow : Form
     {
         private PlayerModel player;
+        private LoginForm lg;
         private int PLAYERS = 2;
         private string address = "127.0.0.1";
         private string msg_action = "not_action";
+
         private bool finish;
+        private bool isAllIn;
+        private bool playerCall;
+
+        private long currentMaxBet = 0;
+        private long playerBet = 0;
 
         public PokerWindow() { }
         public PokerWindow(int port, string login)
@@ -111,11 +119,17 @@ namespace TexasHoldemClient
                 // сообщение для сервера;
                 while (true)
                 {
+                    playerCall = false;
                     // если картинки карты не удаляется, доп финализация
                     if (finish)
                     {
                         finalize();
                         finish = false;
+                    }
+                    if (player.getChips() <= 0)
+                    {
+                        // lose
+                        break;
                     }
                     string stage = (string)stage_param;
                     IPEndPoint ipPoint = new IPEndPoint(IPAddress.Parse(address), player.getPort());
@@ -146,11 +160,26 @@ namespace TexasHoldemClient
                     DrawCards(args);
                     Draw(args);
                     updateChips(args);
+                    // нужно проверить, не повысил ли кто то ставку
+                    // если да то делаем неактивной кнопку check
+                   
+
                     if (args[0].Equals("u_turn"))
                     {
-                        // нужно проверить, не повысил ли кто то ставку
-                        // если да то делаем неактивной кнопку check
-                        active();
+                        if(!playerCall)
+                        {
+                            if (hasCheck(args))
+                            {
+                                active2();
+                            }
+                            else {
+                                active();
+                            }
+                        } else
+                        {
+                            active();
+                        }
+
                         setText("you turn");
                         message = "action";
                     }
@@ -167,9 +196,9 @@ namespace TexasHoldemClient
                         Thread.Sleep(3000);
                         finalize();
                         finish = true;
-
                     }
                     else {
+
                         setText("you wait");
                         unactive();
                         // очищаем и готовимся к новому запросу
@@ -210,6 +239,26 @@ namespace TexasHoldemClient
 
         }
 
+        private bool hasCheck(string[] args)
+        {
+            string[] param;
+            for (int i = 0; i < PLAYERS; i++)
+            {
+                if (i != player.getNumber())
+                {
+                    param = args[i + 1].Split('|');
+                    // проверяем ставку
+                    string[] call = param[3].Split(':');
+                    // устанавливаем ставку
+                    if (call[1].Equals("call")) {
+                        currentMaxBet = long.Parse(call[2]);
+                        return true;
+                    }
+                } 
+            }
+            return false;
+        }
+
         private string extractMsgAboutWinners(string arg)
         {
             string[] args = arg.Split(',');
@@ -245,6 +294,7 @@ namespace TexasHoldemClient
 
         delegate void DrawCallback(string[] args);
 
+
         public void DrawCards(string[] args)
         {
             if (p1c1.InvokeRequired && p1c2.InvokeRequired
@@ -273,21 +323,40 @@ namespace TexasHoldemClient
 
                     if (p1c1.ImageLocation == null && p1c2.ImageLocation == null)
                     {
-                        p1c1.ImageLocation = CardImage.getResource(card1[0]);
-                        p1c2.ImageLocation = CardImage.getResource(card1[1]);
+                        if (player.getNumber() == 0)
+                        {
+                            p1c1.ImageLocation = CardImage.getResource(card1[0]);
+                            p1c2.ImageLocation = CardImage.getResource(card1[1]);
+
+                        } else
+                        {
+                            p1c1.ImageLocation = CardImage.getBack();
+                            p1c2.ImageLocation = CardImage.getBack();
+                        }
                         p1c1.SizeMode = PictureBoxSizeMode.StretchImage;
                         p1c2.SizeMode = PictureBoxSizeMode.StretchImage;
                     }
 
+
                     if (p2c1.ImageLocation == null && p2c2.ImageLocation == null)
                     {
-                        p2c1.ImageLocation = CardImage.getResource(card2[0]);
-                        p2c2.ImageLocation = CardImage.getResource(card2[1]);
+                        if (player.getNumber() == 1)
+                        {
+                            p2c1.ImageLocation = CardImage.getResource(card2[0]);
+                            p2c2.ImageLocation = CardImage.getResource(card2[1]);
+
+                        }
+                        else
+                        {
+                            p2c1.ImageLocation = CardImage.getBack();
+                            p2c2.ImageLocation = CardImage.getBack();
+                        }
                         p2c1.SizeMode = PictureBoxSizeMode.StretchImage;
                         p2c2.SizeMode = PictureBoxSizeMode.StretchImage;
+
                     }
 
-                    if(table.Length > 1)
+                    if (table.Length > 1)
                     {
                         if(tc1.ImageLocation == null) { 
                             tc1.ImageLocation = CardImage.getResource(table[0]);
@@ -407,16 +476,27 @@ namespace TexasHoldemClient
             // проверяем введено ли значение
             if (!string.IsNullOrEmpty(textBox1.Text))
             {
-                int call = int.Parse(textBox1.Text);
+                long call = long.Parse(textBox1.Text);
                 if(call > player.getChips())
                 {
-                    // у вас не достаточно фишек, проверка
-                    return;
+                    if(player.getChips() != 0 && player.getChips() < currentMaxBet)
+                    {
+                        // all in
+                        isAllIn = true;
+                        call = player.getChips();
+                        player.setChips(1);
+                    } else
+                    {
+                        // у вас не достаточно фишек, проверка
+                        return;
+                    }
+                    
                 } else
                 {
                     player.setChips(player.getChips() - call);
-                    msg_action = "call:" + call;
                 }
+                playerCall = true;
+                msg_action = "call:" + call;
                 unactive();
             }
         }
@@ -429,6 +509,7 @@ namespace TexasHoldemClient
         }
 
         delegate void ActiveCallBack();
+        delegate void ActiveCallBack2();
 
         private void active()
         {
@@ -440,6 +521,23 @@ namespace TexasHoldemClient
             } else
             {
                 button1.Enabled = true;
+                button2.Enabled = true;
+                button3.Enabled = true;
+                textBox1.Enabled = true;
+            }
+        }
+
+        private void active2()
+        {
+            if (button1.InvokeRequired && button2.InvokeRequired
+                && button3.InvokeRequired && textBox1.InvokeRequired)
+            {
+                ActiveCallBack2 a2 = new ActiveCallBack2(active2);
+                this.Invoke(a2, new object[] { });
+            }
+            else
+            {
+                button1.Enabled = false;
                 button2.Enabled = true;
                 button3.Enabled = true;
                 textBox1.Enabled = true;
@@ -474,6 +572,7 @@ namespace TexasHoldemClient
                 Invoke(f, new object[] { });
             } else
             {
+                isAllIn = false;
                 player1cards.Text = "";
                 player2cards.Text = "";
                 tableCard.Text = "Card on table:";

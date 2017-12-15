@@ -12,6 +12,7 @@ namespace TexasHoldemClient.view
 {
     public partial class LoginForm : Form
     {
+        private PokerWindow pw;
         public LoginForm()
         {
             InitializeComponent();

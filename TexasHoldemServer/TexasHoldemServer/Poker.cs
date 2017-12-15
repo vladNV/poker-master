@@ -28,7 +28,7 @@ namespace TexasHoldemServer.model
             deck = new CardStack();
             bigBlind = 1;
             smallBlind = 0;
-            blind.upBlinds(25, 50);
+            blind.upBlinds(50, 50);
         }
 
         public Blind getBank()
@@ -50,6 +50,7 @@ namespace TexasHoldemServer.model
         {
             turn = 0;
         }
+
 
         public void next()
         {

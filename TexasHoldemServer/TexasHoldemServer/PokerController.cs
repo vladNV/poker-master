@@ -202,6 +202,21 @@ namespace TexasHoldem.main.controller
 
         }
 
+        private bool stageCall()
+        {
+            int count = 0;
+            for (int i = 0; i < PLAYERS; i++)
+            {
+                // fix me
+                string[] param = playersState[i].Split(':');
+                if (param[0].Equals("call") || param[0].Equals("fold"))
+                {
+                    count++;
+                }
+            }
+            return count == PLAYERS || count == 0;
+        }
+
         private bool stageFinish(int id)
         {
             for(int i = 0; i < PLAYERS; i++)
@@ -269,8 +284,12 @@ namespace TexasHoldem.main.controller
                             actionHandler(act, playerID);
                             if (model.getTurn() == -1)
                             {
-                                isFinishRound = true;
+                                if(stageCall())
+                                {
+                                    isFinishRound = true;
+                                }
                                 model.next();
+
                             }
                             if (act.Equals("not_action"))
                             {
