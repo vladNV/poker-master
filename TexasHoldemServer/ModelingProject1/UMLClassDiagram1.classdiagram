@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<logicalClassDesignerModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm5="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" dslVersion="1.0.0.0" Id="46438df8-225e-4e5f-92f4-48c67663d4bb" name="UMLClassDiagram1" linkedPackageId="afd603d4-0ea9-4f6f-aadc-575b626467b5" xmlns="http://schemas.microsoft.com/dsltools/LogicalClassDesigner">
+  <profileInstances>
+    <packageHasProfileInstances Id="4f7d329f-e5aa-4a1c-9a79-c8a08b02a0dd">
+      <profileInstance Id="20aff5fc-ebcc-4756-9dd8-5dc64117d68e" name="StandardProfileL2">
+        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+      </profileInstance>
+      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+    </packageHasProfileInstances>
+    <packageHasProfileInstances Id="5a0a8f80-f4f4-4d7d-aae2-09019406e9e2">
+      <profileInstance Id="a9195403-242b-4371-9426-d7e62e977bc4" name="StandardProfileL3">
+        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+      </profileInstance>
+      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+    </packageHasProfileInstances>
+  </profileInstances>
+  <package Id="afd603d4-0ea9-4f6f-aadc-575b626467b5" name="ModelingProject1">
+    <elementDefinition Id="3bfffb29-7339-49ea-9eab-526c3dc87cc0" />
+  </package>
+</logicalClassDesignerModel>
