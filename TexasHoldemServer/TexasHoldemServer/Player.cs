@@ -13,8 +13,6 @@ namespace TexasHoldem.main.model
         // public fields for sort
         public double pokerCombo;
         public int number;
-
-        private int port;
         private string nickname;
         private long chips;
         private List<Card> playerCards;
