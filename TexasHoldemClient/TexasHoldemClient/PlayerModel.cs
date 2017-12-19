@@ -17,42 +17,33 @@ namespace TexasHoldemClient
         {
             this.port = port;
         }
-
         public int getPort()
         {
             return port;
         }
-
         public long getChips()
         {
             return this.chips;
         }
-
         public void setChips(long chips)
         {
             this.chips = chips;
         }
-
         public int getNumber()
         {
             return number;
         }
-
         public string getLogin()
         {
             return login;
         }
-
         public void setNumber(int number)
         {
             this.number = number;
         }
-
         public void setLogin(string login)
         {
             this.login = login;
         }
-
-
     }
 }
