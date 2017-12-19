@@ -35,11 +35,11 @@ namespace TexasHoldemClient
                 connect();
             } catch (Exception e)
             {
-                MessageBox.Show("Server connection error!", "Error connection", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show("Server connection error!", "Error connection", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 Console.WriteLine(e.Message);
                 return;
             }
-            
             wait();
             Thread thread = new Thread(new ParameterizedThreadStart(play));
             thread.Start("stage");
@@ -136,6 +136,8 @@ namespace TexasHoldemClient
                     if (player.getChips() <= 0)
                     {
                         // lose
+                        MessageBox.Show("Game over, all chips ended", "Game info",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         break;
                     }
                     string stage = (string)stage_param;
@@ -180,30 +182,19 @@ namespace TexasHoldemClient
                             else {
                                 active();
                             }
-                        } else
-                        {
+                        } else {
                             active();
                         }
-
                         setText("you turn");
                         message = "action";
-                    }
-                    else if (args[0].Equals("wait_action"))
-                    {
-                        // ожидаем действие игрока
-                        continue;
-                    }
-                    else if (args[0].Equals("win"))
-                    {
+                    } else if (args[0].Equals("win")) {
                         Console.WriteLine(player.getLogin() + " won !");
                         string[] param = args[4].Split('|');
                         printWinners(extractMsgAboutWinners(param[1]));
                         Thread.Sleep(5000);
                         finalize();
                         finish = true;
-                    }
-                    else {
-
+                    } else {
                         setText("you wait");
                         unactive();
                         // очищаем и готовимся к новому запросу
@@ -310,8 +301,7 @@ namespace TexasHoldemClient
 
         // call
         private void button2_Click(object sender, EventArgs e)
-        {
-
+        { 
             // сделать проверку на ввод символов и сделать проверку на границы!!!
             // проверяем введено ли значение
             if (!string.IsNullOrEmpty(textBox1.Text))
@@ -614,11 +604,6 @@ namespace TexasHoldemClient
                 button3.Enabled = false;
                 textBox1.Enabled = false;
             }
-        }
-
-        private void p2chips_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

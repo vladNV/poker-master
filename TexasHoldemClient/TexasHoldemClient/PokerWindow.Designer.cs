@@ -210,7 +210,6 @@
             this.p2chips.Size = new System.Drawing.Size(13, 13);
             this.p2chips.TabIndex = 18;
             this.p2chips.Text = "?";
-            this.p2chips.Click += new System.EventHandler(this.p2chips_Click);
             // 
             // bank
             // 

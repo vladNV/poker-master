@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TexasHoldem.main.model
 {
@@ -22,12 +19,6 @@ namespace TexasHoldem.main.model
 
         public string name { get; set; }
 
-
-        public List<Card> sortCards(List<Card> cards)
-        {
-            cards.Sort();
-            return cards;
-        }
 
         public int CompareTo(Card other)
         {
@@ -76,68 +67,5 @@ namespace TexasHoldem.main.model
         {
             return name + "&" + suitName(this.suit);
         }
-
-        /*// @Test
-        static void Main(string[] args)
-        {
-            HandRankDetermine();
-        }
-
-        // @Test
-        public static void HandRankDetermine()
-        {
-
-            CardCombination combination = new CardCombination();
-            CardStack deck;
-            for(int i = 0; i < 10; i++)
-            {
-                List<Card> cardsPlayerOne = new List<Card>();
-                List<Card> cardsPlayerTwo = new List<Card>();
-                List<Card> cardsTable = new List<Card>();
-                deck = new CardStack();
-                deck.shuffle();
-                for(int j = 0; j < 2; j++)
-                {
-                    cardsPlayerOne.Add(deck.popToHand());
-                    cardsPlayerTwo.Add(deck.popToHand());
-                }
-                //flop
-                for(int j = 0; j < 3; j++)
-                {
-                    cardsTable.Add(deck.pop());
-                }
-                //turn
-                cardsTable.Add(deck.pop());
-                //river
-                cardsTable.Add(deck.pop());
-
-                Console.WriteLine("Player 1");
-                foreach (Card card in cardsPlayerOne)
-                {
-                    Console.Write(card + " ");
-                }
-                Console.WriteLine("");
-                foreach (Card card in cardsTable)
-                {
-                    Console.Write(card + " ");
-                }
-                Console.WriteLine("");
-                Console.WriteLine("Player 2");
-                foreach (Card card in cardsPlayerTwo)
-                {
-                    Console.Write(card + " ");
-                }
-                Console.WriteLine();
-                double p1 = combination.determineHandRank(joinCards(cardsPlayerOne, cardsTable));
-                double p2 = combination.determineHandRank(joinCards(cardsPlayerTwo, cardsTable));
-                Console.WriteLine(p1 + " | " + p2);
-
-                Console.WriteLine("---------------------");
-            }
-            Console.Read();
-
-        } */
-
     }
-
 }

@@ -11,7 +11,6 @@ namespace TexasHoldemServer
             Poker poker = new Poker();
             ServerView view = new ServerView();
             PokerController controller = new PokerController(poker, view);
-
             controller.startServer();
         }
     }

@@ -19,16 +19,6 @@ namespace TexasHoldem.main.model
         private long chips;
         private List<Card> playerCards;
 
-        public void setPort(int port)
-        {
-            this.port = port;
-        }
-
-        public int getPort()
-        {
-            return port;
-        }
-
         public long getChips()
         {
             return this.chips;
@@ -53,16 +43,6 @@ namespace TexasHoldem.main.model
         {
             return number;
         }
-
-        /* public void setPokerCombo(double pokerCombo)
-        {
-            this.pokerCombo = pokerCombo;
-        }
-
-        public double getPokerCombo()
-        {
-            return pokerCombo;
-        } */
 
         public void setCards(Card one, Card two)
         {

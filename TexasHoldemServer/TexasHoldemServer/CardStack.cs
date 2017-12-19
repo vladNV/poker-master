@@ -9,9 +9,7 @@ namespace TexasHoldem.main.model
     public class CardStack
     {
         private Card[] stack = new Card[52];
-
         private readonly int DeckSize = 52;
-
         readonly string[] names = {"Two","Three","Four","Five","Six","Seven",
                                 "Eight","Nine","Ten","Jack","Queen","King","Ace"};
         private int position = -1;
@@ -25,13 +23,6 @@ namespace TexasHoldem.main.model
                     stack[k] = new Card(i, j, names[j]);
                     k++;
                 }
-            }
-        }
-
-        public void printCardStack()
-        {
-            foreach(Card card in stack){
-                Console.WriteLine(card);
             }
         }
         

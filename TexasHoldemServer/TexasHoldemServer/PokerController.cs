@@ -130,14 +130,12 @@ namespace TexasHoldem.main.controller
                                     isFinishRound = true;
                                     isFinishGame = true;
                                 }
-
                             }
                             // обработка запроса
                             else
                             {
                                 resp = msgHandler(msg);
                             }
-
                             // отправка ответа
                             data = Encoding.Unicode.GetBytes(resp);
                             handler.Send(data);
