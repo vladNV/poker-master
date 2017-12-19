@@ -11,17 +11,15 @@ namespace TexasHoldemClient
     public partial class PokerWindow : Form
     {
         private PlayerModel player;
-        private LoginForm lg;
         private int PLAYERS = 2;
         private string address = "127.0.0.1";
         private string msg_action = "not_action";
 
         private bool finish;
-        private bool isAllIn;
         private bool playerCall;
-
         private long currentMaxBet = 0;
-        private long playerBet = 0;
+        // feature
+        private bool isAllIn;
 
         public PokerWindow() { }
         public PokerWindow(int port, string login)
@@ -32,7 +30,16 @@ namespace TexasHoldemClient
             player.setPort(port);
             player.setChips(1000);
             youLogin.Text += login;
-            connect();
+            try
+            {
+                connect();
+            } catch (Exception e)
+            {
+                MessageBox.Show("Server connection error!", "Error connection", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                Console.WriteLine(e.Message);
+                return;
+            }
+            
             wait();
             Thread thread = new Thread(new ParameterizedThreadStart(play));
             thread.Start("stage");
@@ -62,7 +69,7 @@ namespace TexasHoldemClient
                 socket.Close();
             } catch(Exception e)
             {
-                Console.WriteLine(e.Message);
+                throw e;
             }
 
         }
@@ -162,8 +169,6 @@ namespace TexasHoldemClient
                     updateChips(args);
                     // нужно проверить, не повысил ли кто то ставку
                     // если да то делаем неактивной кнопку check
-                   
-
                     if (args[0].Equals("u_turn"))
                     {
                         if(!playerCall)
@@ -193,7 +198,7 @@ namespace TexasHoldemClient
                         Console.WriteLine(player.getLogin() + " won !");
                         string[] param = args[4].Split('|');
                         printWinners(extractMsgAboutWinners(param[1]));
-                        Thread.Sleep(3000);
+                        Thread.Sleep(5000);
                         finalize();
                         finish = true;
                     }
@@ -215,7 +220,6 @@ namespace TexasHoldemClient
                 Console.WriteLine(e.Message);
             }
         }
-
         private void updateChips(string[] args)
         {
             string[] param;
@@ -238,7 +242,6 @@ namespace TexasHoldemClient
             }
 
         }
-
         private bool hasCheck(string[] args)
         {
             string[] param;
@@ -258,7 +261,6 @@ namespace TexasHoldemClient
             }
             return false;
         }
-
         private string extractMsgAboutWinners(string arg)
         {
             string[] args = arg.Split(',');
@@ -269,171 +271,9 @@ namespace TexasHoldemClient
             return arg;
 
         }
-
-        delegate void SetStatus(string t);
-
-        public void setText(string t)
-        {
-            if (status.InvokeRequired)
-            {
-                SetStatus s = new SetStatus(setText);
-                this.Invoke(s, new object[] {t });
-            }
-            else
-            {
-                status.Text = t;
-            }
-        }
-
         public void global_FormClosed(object sender, EventArgs e)
         {
             Application.Exit();
-        }
-
-        delegate void DrawCardsCallback(string[] args);
-
-        delegate void DrawCallback(string[] args);
-
-
-        public void DrawCards(string[] args)
-        {
-            if (p1c1.InvokeRequired && p1c2.InvokeRequired
-                    && p2c1.InvokeRequired && p2c2.InvokeRequired
-                        && tc1.InvokeRequired && tc2.InvokeRequired
-                            && tc3.InvokeRequired && tc4.InvokeRequired
-                                && tc5.InvokeRequired)
-            {
-                DrawCardsCallback dc = new DrawCardsCallback(DrawCards);
-                Invoke(dc, new object[] { args });
-            } else
-            {
-                try
-                {
-                    string[] card1 = args[1].Split('|');
-                    string[] card2 = args[2].Split('|');
-                    string[] table = args[3].Split('|');
-
-                    card1 = card1[1].Split(':');
-                    card2 = card2[1].Split(':');
-                    table = table[1].Split(':');
-
-                    card1 = card1[1].Split(',');
-                    card2 = card2[1].Split(',');
-                    table = table[1].Split(',');
-
-                    if (p1c1.ImageLocation == null && p1c2.ImageLocation == null)
-                    {
-                        if (player.getNumber() == 0)
-                        {
-                            p1c1.ImageLocation = CardImage.getResource(card1[0]);
-                            p1c2.ImageLocation = CardImage.getResource(card1[1]);
-
-                        } else
-                        {
-                            p1c1.ImageLocation = CardImage.getBack();
-                            p1c2.ImageLocation = CardImage.getBack();
-                        }
-                        p1c1.SizeMode = PictureBoxSizeMode.StretchImage;
-                        p1c2.SizeMode = PictureBoxSizeMode.StretchImage;
-                    }
-
-
-                    if (p2c1.ImageLocation == null && p2c2.ImageLocation == null)
-                    {
-                        if (player.getNumber() == 1)
-                        {
-                            p2c1.ImageLocation = CardImage.getResource(card2[0]);
-                            p2c2.ImageLocation = CardImage.getResource(card2[1]);
-
-                        }
-                        else
-                        {
-                            p2c1.ImageLocation = CardImage.getBack();
-                            p2c2.ImageLocation = CardImage.getBack();
-                        }
-                        p2c1.SizeMode = PictureBoxSizeMode.StretchImage;
-                        p2c2.SizeMode = PictureBoxSizeMode.StretchImage;
-
-                    }
-
-                    if (table.Length > 1)
-                    {
-                        if(tc1.ImageLocation == null) { 
-                            tc1.ImageLocation = CardImage.getResource(table[0]);
-                            tc1.SizeMode = PictureBoxSizeMode.StretchImage; 
-                        }
-                        if (table.Length >= 2)
-                        {
-                            if (tc2.ImageLocation == null)
-                            {
-                                tc2.ImageLocation = CardImage.getResource(table[1]);
-                                tc2.SizeMode = PictureBoxSizeMode.StretchImage;
-                            }
-                            if (table.Length >= 3)
-                            {
-                                if (tc3.ImageLocation == null)
-                                {
-                                    tc3.ImageLocation = CardImage.getResource(table[2]);
-                                    tc3.SizeMode = PictureBoxSizeMode.StretchImage;
-                                }
-
-                                if (table.Length >= 4)
-                                {
-                                    if (tc4.ImageLocation == null)
-                                    {
-                                        tc4.ImageLocation = CardImage.getResource(table[3]);
-                                        tc4.SizeMode = PictureBoxSizeMode.StretchImage;
-                                    }
-                                    if (table.Length == 5)
-                                    {
-                                        if (tc5.ImageLocation == null)
-                                        {
-                                            tc5.ImageLocation = CardImage.getResource(table[4]);
-                                            tc5.SizeMode = PictureBoxSizeMode.StretchImage;
-                                        }
-                                    }
-                                }
-                            }
-                        } 
-                    } 
-                } catch (Exception e)
-                {
-                    Console.WriteLine("Draw cards exepction");
-                    Console.WriteLine(e.Message);
-                }
-
-
-            }
-        }
-
-        public void Draw(string[] args)
-        {
-            // fix draw
-            if (player1cards.InvokeRequired && player2cards.InvokeRequired
-                    && tableCard.InvokeRequired && player1.InvokeRequired 
-                        && p1act.InvokeRequired && p2act.InvokeRequired
-                            && p1chips.InvokeRequired && p2chips.InvokeRequired
-                                && bank.InvokeRequired)
-            {
-                DrawCallback d = new DrawCallback(Draw);
-                Invoke(d, new object[] { args });
-            } else
-            {
-                string[] param1 = args[1].Split('|');
-                string[] param2 = args[2].Split('|');
-                string[] table = args[3].Split('|');
-                //player1cards.Text = param1[1];
-                //player2cards.Text = param2[1];
-                //tableCard.Text = table[1];
-
-                p1chips.Text = param1[2];
-                p2chips.Text = param2[2];
-                bank.Text = table[2];
-
-                // действия
-                animation(param1[3], param2[3]);
-  
-            }
         }
 
         // fix me, for many players
@@ -477,24 +317,32 @@ namespace TexasHoldemClient
             if (!string.IsNullOrEmpty(textBox1.Text))
             {
                 long call = long.Parse(textBox1.Text);
-                if(call > player.getChips())
+                if (call > player.getChips())
                 {
-                    if(player.getChips() != 0 && player.getChips() < currentMaxBet)
+                    if (player.getChips() != 0 && player.getChips() < currentMaxBet)
                     {
                         // all in
                         isAllIn = true;
                         call = player.getChips();
                         player.setChips(1);
-                    } else
+                    }
+                    else
                     {
                         // у вас не достаточно фишек, проверка
+                        MessageBox.Show("You cannot raise, so low chips", "Warning!",
+                            MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        msg_action = "not_action";
                         return;
                     }
-                    
-                } else
-                {
-                    player.setChips(player.getChips() - call);
                 }
+                if (call < currentMaxBet)
+                {
+                    MessageBox.Show("You cannot raise, you must call >= " + currentMaxBet, "Warning",
+                            MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    msg_action = "not_action";
+                    return;
+                }
+                player.setChips(player.getChips() - call);
                 playerCall = true;
                 msg_action = "call:" + call;
                 unactive();
@@ -510,7 +358,168 @@ namespace TexasHoldemClient
 
         delegate void ActiveCallBack();
         delegate void ActiveCallBack2();
+        delegate void SetWinnerText(string text);
+        delegate void Finalize();
+        delegate void UnActiveCallBack();
+        delegate void DrawCardsCallback(string[] args);
+        delegate void DrawCallback(string[] args);
+        delegate void SetStatus(string t);
 
+        public void Draw(string[] args)
+        {
+            // fix draw
+            if (player1cards.InvokeRequired && player2cards.InvokeRequired
+                    && tableCard.InvokeRequired && player1.InvokeRequired
+                        && p1act.InvokeRequired && p2act.InvokeRequired
+                            && p1chips.InvokeRequired && p2chips.InvokeRequired
+                                && bank.InvokeRequired)
+            {
+                DrawCallback d = new DrawCallback(Draw);
+                Invoke(d, new object[] { args });
+            }
+            else
+            {
+                string[] param1 = args[1].Split('|');
+                string[] param2 = args[2].Split('|');
+                string[] table = args[3].Split('|');
+                //player1cards.Text = param1[1];
+                //player2cards.Text = param2[1];
+                //tableCard.Text = table[1];
+
+                p1chips.Text = param1[2];
+                p2chips.Text = param2[2];
+                bank.Text = table[2];
+
+                // действия
+                animation(param1[3], param2[3]);
+
+            }
+        }
+        public void DrawCards(string[] args)
+        {
+            if (p1c1.InvokeRequired && p1c2.InvokeRequired
+                    && p2c1.InvokeRequired && p2c2.InvokeRequired
+                        && tc1.InvokeRequired && tc2.InvokeRequired
+                            && tc3.InvokeRequired && tc4.InvokeRequired
+                                && tc5.InvokeRequired)
+            {
+                DrawCardsCallback dc = new DrawCardsCallback(DrawCards);
+                Invoke(dc, new object[] { args });
+            }
+            else
+            {
+                try
+                {
+                    string[] card1 = args[1].Split('|');
+                    string[] card2 = args[2].Split('|');
+                    string[] table = args[3].Split('|');
+
+                    card1 = card1[1].Split(':');
+                    card2 = card2[1].Split(':');
+                    table = table[1].Split(':');
+
+                    card1 = card1[1].Split(',');
+                    card2 = card2[1].Split(',');
+                    table = table[1].Split(',');
+
+                    if (p1c1.ImageLocation == null && p1c2.ImageLocation == null)
+                    {
+                        if (player.getNumber() == 0)
+                        {
+                            p1c1.ImageLocation = CardImage.getResource(card1[0]);
+                            p1c2.ImageLocation = CardImage.getResource(card1[1]);
+
+                        }
+                        else
+                        {
+                            p1c1.ImageLocation = CardImage.getBack();
+                            p1c2.ImageLocation = CardImage.getBack();
+                        }
+                        p1c1.SizeMode = PictureBoxSizeMode.StretchImage;
+                        p1c2.SizeMode = PictureBoxSizeMode.StretchImage;
+                    }
+
+
+                    if (p2c1.ImageLocation == null && p2c2.ImageLocation == null)
+                    {
+                        if (player.getNumber() == 1)
+                        {
+                            p2c1.ImageLocation = CardImage.getResource(card2[0]);
+                            p2c2.ImageLocation = CardImage.getResource(card2[1]);
+
+                        }
+                        else
+                        {
+                            p2c1.ImageLocation = CardImage.getBack();
+                            p2c2.ImageLocation = CardImage.getBack();
+                        }
+                        p2c1.SizeMode = PictureBoxSizeMode.StretchImage;
+                        p2c2.SizeMode = PictureBoxSizeMode.StretchImage;
+
+                    }
+
+                    if (table.Length > 1)
+                    {
+                        if (tc1.ImageLocation == null)
+                        {
+                            tc1.ImageLocation = CardImage.getResource(table[0]);
+                            tc1.SizeMode = PictureBoxSizeMode.StretchImage;
+                        }
+                        if (table.Length >= 2)
+                        {
+                            if (tc2.ImageLocation == null)
+                            {
+                                tc2.ImageLocation = CardImage.getResource(table[1]);
+                                tc2.SizeMode = PictureBoxSizeMode.StretchImage;
+                            }
+                            if (table.Length >= 3)
+                            {
+                                if (tc3.ImageLocation == null)
+                                {
+                                    tc3.ImageLocation = CardImage.getResource(table[2]);
+                                    tc3.SizeMode = PictureBoxSizeMode.StretchImage;
+                                }
+
+                                if (table.Length >= 4)
+                                {
+                                    if (tc4.ImageLocation == null)
+                                    {
+                                        tc4.ImageLocation = CardImage.getResource(table[3]);
+                                        tc4.SizeMode = PictureBoxSizeMode.StretchImage;
+                                    }
+                                    if (table.Length == 5)
+                                    {
+                                        if (tc5.ImageLocation == null)
+                                        {
+                                            tc5.ImageLocation = CardImage.getResource(table[4]);
+                                            tc5.SizeMode = PictureBoxSizeMode.StretchImage;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Draw cards exepction");
+                    Console.WriteLine(e.Message);
+                }
+            }
+        }
+
+        public void setText(string t)
+        {
+            if (status.InvokeRequired)
+            {
+                SetStatus s = new SetStatus(setText);
+                this.Invoke(s, new object[] { t });
+            }
+            else
+            {
+                status.Text = t;
+            }
+        }
         private void active()
         {
             if (button1.InvokeRequired && button2.InvokeRequired
@@ -544,10 +553,9 @@ namespace TexasHoldemClient
             }
         }
 
-        delegate void SetWinnerText(string text);
-
         private void printWinners(string text)
         {
+            winner.Text = "WINNERS: ";
             if (winner.InvokeRequired)
             {
                 SetWinnerText s = new SetWinnerText(printWinners);
@@ -557,8 +565,6 @@ namespace TexasHoldemClient
                 winner.Text += text;
             }
         }
-
-        delegate void Finalize();
 
         private void finalize()
         {
@@ -594,8 +600,6 @@ namespace TexasHoldemClient
             }
         }
 
-        delegate void UnActiveCallBack();
-
         private void unactive()
         {
             if (button1.InvokeRequired && button2.InvokeRequired
@@ -610,11 +614,6 @@ namespace TexasHoldemClient
                 button3.Enabled = false;
                 textBox1.Enabled = false;
             }
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void p2chips_Click(object sender, EventArgs e)

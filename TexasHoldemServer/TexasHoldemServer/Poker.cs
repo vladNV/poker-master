@@ -31,19 +31,10 @@ namespace TexasHoldemServer.model
             blind.upBlinds(50, 50);
         }
 
-        public Blind getBank()
-        {
-            return blind;
-        }
 
         public void setPlayer(Player player)
         {
             players.Add(player);
-        }
-
-        public int getTurn()
-        {
-            return turn;
         }
 
         public void resetQueue()
@@ -132,8 +123,6 @@ namespace TexasHoldemServer.model
 
         }
 
-        
-
         public void determineWinners()
         {
             winners = new List<Player>();
@@ -193,9 +182,23 @@ namespace TexasHoldemServer.model
             string resp = "||winners|";
             for(int i = 0; i < winners.Count; i++)
             {
-                resp += winners[i].getNickname() + ",";
+                resp += winners[i].getNickname() + " , ";
             }
             return resp.Substring(0, resp.Length - 1);
+        }
+
+        public string getCards()
+        {
+            string request = "";
+            for (int i = 0; i < tableCards.Count; i++)
+            {
+                request += tableCards[i].ToCode() + ",";
+            }
+            if (request.Length != 0)
+            {
+                request = request.Substring(0, request.Length - 1);
+            }
+            return request;
         }
 
         public Player determineWinners(int id)
@@ -205,23 +208,20 @@ namespace TexasHoldemServer.model
             return players[id];
         }
 
-        public string getCards()
-        {
-            string request = "";
-            for(int i = 0; i < tableCards.Count; i++)
-            {
-                request += tableCards[i].ToCode() + ",";
-            }
-            if(request.Length != 0)
-            {
-                request = request.Substring(0, request.Length - 1);
-            }
-            return request;
-        }
 
         public List<Player> getPlayers()
         {
             return this.players;
+        }
+
+        public int getTurn()
+        {
+            return turn;
+        }
+
+        public Blind getBank()
+        {
+            return blind;
         }
 
     }

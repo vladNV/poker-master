@@ -174,12 +174,12 @@
             // winner
             // 
             this.winner.AutoSize = true;
+            this.winner.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.winner.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.winner.Location = new System.Drawing.Point(538, 335);
+            this.winner.Location = new System.Drawing.Point(444, 369);
             this.winner.Name = "winner";
-            this.winner.Size = new System.Drawing.Size(49, 13);
+            this.winner.Size = new System.Drawing.Size(0, 20);
             this.winner.TabIndex = 15;
-            this.winner.Text = "Winners ";
             // 
             // youLogin
             // 

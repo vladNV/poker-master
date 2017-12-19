@@ -43,13 +43,6 @@ namespace TexasHoldem.main.model
         public void bet(long value)
         {
             total += value;
-            /*
-            //check
-            if (value >= upper)
-            {
-                total += value;
-            }
-            */
         }
     }
 }

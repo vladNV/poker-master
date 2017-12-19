@@ -139,8 +139,6 @@ namespace TexasHoldem.main.model
                 Console.WriteLine(e.StackTrace);
             }
             return value;
-
-
         }
 
         double isPair(List<Card> cards)
@@ -223,7 +221,7 @@ namespace TexasHoldem.main.model
                     ++straight;
                     highCard = cards[i].type;
                 } else {
-                    if(straight != 5)
+                    if (straight != 5)
                     {
                         straight = 1;
                     }
